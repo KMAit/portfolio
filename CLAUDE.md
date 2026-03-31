@@ -92,7 +92,11 @@ interface Project {
   name: string
   description: string
   stack: string[]
-  githubUrl: string
+  technicalRationale: string
+  mainChallenge: string
+  githubUrl: string | null
+  demoUrl: string | null
+  previewImage: string | null
   status: 'in-progress' | 'completed'
 }
 
@@ -102,9 +106,18 @@ interface StackCategory {
 }
 
 interface ContactInfo {
-  email: string
+  // email removed — stored as base64 in ContactSection.vue to prevent bot scraping
   github: string
   linkedin: string
+}
+
+interface DeveloperProfile {
+  fullName: string
+  title: string
+  tagline: string
+  location: string
+  availability: string
+  responseTime: string
 }
 ```
 
@@ -143,6 +156,10 @@ Variables defined in `src/assets/styles/main.css`:
 - Email links use `href="mailto:"` only — never expose in JS
 - No `v-html` usage
 - CSP headers recommended for production deployment
+- No sensitive data exposed in the JS bundle
+- `rel="noopener noreferrer"` on all external links
+- CSP meta tags in `index.html`
+- No `console.log` in production (Vite strips them automatically on build)
 
 ---
 
@@ -162,6 +179,14 @@ style: update color variables
 refactor: extract ProjectCard component
 docs: update README
 ```
+
+---
+
+## Architecture
+- One responsibility per component — no mixing concerns
+- No business logic in templates — keep them declarative
+- Composables for all reusable logic
+- Props are read-only — never mutate them directly
 
 ---
 
